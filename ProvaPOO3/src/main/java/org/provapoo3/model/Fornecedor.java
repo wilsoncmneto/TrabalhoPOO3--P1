@@ -10,7 +10,14 @@ public class Fornecedor {
     private String cidade;
     private String estado;
 
-    public Fornecedor() {}
+    public Fornecedor() {
+        this.cnpj = cnpj;
+        this.razaoSocial = razaoSocial;
+        this.telefone = telefone;
+        this.email = email;
+        this.cidade = cidade;
+        this.estado = estado;
+    }
 
     public Fornecedor(String cnpj, String razaoSocial, String telefone, String email, String cidade, String estado) {
         this.cnpj = cnpj;
