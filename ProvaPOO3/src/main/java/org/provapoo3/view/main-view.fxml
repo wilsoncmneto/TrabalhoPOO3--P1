@@ -1,157 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox prefHeight="886.0" prefWidth="978.0" spacing="10" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.provapoo3.controller.MainController">
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.provapoo3.controller.MainController"
+      spacing="10">
     <padding>
-        <Insets bottom="12" left="12" right="12" top="12" />
+        <Insets top="12" right="12" bottom="12" left="12"/>
     </padding>
 
-    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="39.0" prefWidth="939.0" style="-fx-font-size: 26; -fx-font-weight: bold;" text="CADASTRO DE MEDICAMENTOS" textAlignment="CENTER" />
+    <Label text="CADASTRO DE MEDICAMENTOS" style="-fx-font-size: 26; -fx-font-weight: bold;" />
 
     <HBox spacing="16">
-        <TitledPane collapsible="false" text="MEDICAMENTO">
+        <TitledPane text="MEDICAMENTO" collapsible="false">
             <content>
                 <GridPane hgap="8" vgap="8">
                     <padding>
-                        <Insets bottom="8" left="8" right="8" top="8" />
+                        <Insets top="8" right="8" bottom="8" left="8"/>
                     </padding>
                     <columnConstraints>
-                        <ColumnConstraints minWidth="100" />
-                        <ColumnConstraints minWidth="220" />
+                        <ColumnConstraints minWidth="100"/>
+                        <ColumnConstraints minWidth="220"/>
                     </columnConstraints>
 
                     <Label text="Código" GridPane.rowIndex="0" />
-                    <TextField fx:id="txtCodigo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <TextField fx:id="txtCodigo" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
                     <Label text="Nome" GridPane.rowIndex="1" />
-                    <TextField fx:id="txtNome" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextField fx:id="txtNome" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                     <Label text="Descrição" GridPane.rowIndex="2" />
-                    <TextField fx:id="txtDescricao" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <TextField fx:id="txtDescricao" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                     <Label text="Princípio Ativo" GridPane.rowIndex="3" />
-                    <TextField fx:id="txtPrincipio" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <TextField fx:id="txtPrincipio" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                     <Label text="Validade" GridPane.rowIndex="4" />
-                    <DatePicker fx:id="dateValidade" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    <DatePicker fx:id="dateValidade" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Quantidade" GridPane.rowIndex="5" />
-                    <TextField fx:id="txtQuantidade" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                    <TextField fx:id="txtQuantidade" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
                     <Label text="Preço" GridPane.rowIndex="6" />
-                    <TextField fx:id="txtPreco" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                    <TextField fx:id="txtPreco" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
                     <Label text="Controlado" GridPane.rowIndex="7" />
-                    <CheckBox fx:id="chkControlado" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-               <rowConstraints>
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-               </rowConstraints>
+                    <CheckBox fx:id="chkControlado" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
                 </GridPane>
             </content>
         </TitledPane>
 
-        <TitledPane collapsible="false" text="FORNECEDOR">
+        <TitledPane text="FORNECEDOR" collapsible="false">
             <content>
                 <GridPane hgap="8" vgap="8">
                     <padding>
-                        <Insets bottom="8" left="8" right="8" top="8" />
+                        <Insets top="8" right="8" bottom="8" left="8"/>
                     </padding>
                     <columnConstraints>
-                        <ColumnConstraints minWidth="90" />
-                        <ColumnConstraints minWidth="220" />
+                        <ColumnConstraints minWidth="90"/>
+                        <ColumnConstraints minWidth="220"/>
                     </columnConstraints>
 
                     <Label text="CNPJ" GridPane.rowIndex="0" />
-                    <TextField fx:id="txtCnpj" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <TextField fx:id="txtCnpj" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <Label text="Razão Social" GridPane.rowIndex="1" />
-                    <TextField fx:id="txtRazao" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextField fx:id="txtRazao" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                     <Label text="Telefone" GridPane.rowIndex="2" />
-                    <TextField fx:id="txtTelefone" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <TextField fx:id="txtTelefone" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                     <Label text="E-mail" GridPane.rowIndex="3" />
-                    <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <TextField fx:id="txtEmail" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
                     <Label text="Cidade" GridPane.rowIndex="4" />
-                    <TextField fx:id="txtCidade" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    <TextField fx:id="txtCidade" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
                     <Label text="Estado" GridPane.rowIndex="5" />
-                    <TextField fx:id="txtEstado" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-               <rowConstraints>
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-               </rowConstraints>
+                    <TextField fx:id="txtEstado" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
                 </GridPane>
             </content>
         </TitledPane>
 
-        <VBox alignment="TOP_CENTER" spacing="8">
-            <padding>
-                <Insets bottom="0" left="0" right="0" top="0" />
-            </padding>
-            <Button onAction="#onSalvar" prefWidth="160" text="Salvar" />
-            <Button onAction="#onBuscar" prefWidth="160" text="Buscar por Código" />
-            <Button onAction="#onExcluir" prefWidth="160" text="Excluir por Código" />
-            <Button onAction="#onListar" prefWidth="160" text="Listar Todos" />
+        <VBox spacing="8" alignment="TOP_CENTER">
+            <Button text="Salvar" onAction="#onSalvar" prefWidth="180"/>
+            <Button text="Buscar por Código" onAction="#onBuscar" prefWidth="180"/>
+            <Button text="Excluir por Código" onAction="#onExcluir" prefWidth="180"/>
+            <Button text="Listar Todos" onAction="#onListar" prefWidth="180"/>
         </VBox>
     </HBox>
 
-    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="49.0" prefWidth="1045.0" style="-fx-font-size: 18; -fx-font-weight: bold;" text="LISTA DE MEDICAMENTOS">
-      <font>
-         <Font size="18.0" />
-      </font></Label>
+    <!-- BLOCO DE RELATÓRIOS -->
+    <HBox spacing="8">
+        <TitledPane text="RELATÓRIOS (Stream API)" collapsible="false">
+            <content>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Button text="Próximos 30 dias" onAction="#onRelProximos30"/>
+                    <Button text="Estoque baixo (&lt; 5)" onAction="#onRelEstoqueBaixo"/>
+                    <Button text="Valor total por fornecedor" onAction="#onRelValorTotalPorFornecedor"/>
+                    <Button text="Controlados" onAction="#onRelControlados"/>
+                    <Button text="Não controlados" onAction="#onRelNaoControlados"/>
+                </HBox>
+            </content>
+        </TitledPane>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Limpar relatório / Listar Todos" onAction="#onListar"/>
+    </HBox>
+
+    <Label text="LISTA DE MEDICAMENTOS" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
     <TableView fx:id="tblMedicamentos" prefHeight="260">
         <columns>
-            <TableColumn fx:id="colCodigo" prefWidth="100" text="Código" />
-            <TableColumn fx:id="colNome" prefWidth="160" text="Nome" />
-            <TableColumn fx:id="colPrincipio" prefWidth="160" text="Princípio Ativo" />
-            <TableColumn fx:id="colValidade" prefWidth="110" text="Validade" />
-            <TableColumn fx:id="colQtd" prefWidth="70" text="Qtd" />
-            <TableColumn fx:id="colPreco" prefWidth="100" text="Preço" />
-            <TableColumn fx:id="colControlado" prefWidth="90" text="Controlado" />
-            <TableColumn fx:id="colFornecedor" prefWidth="160" text="Fornecedor" />
+            <TableColumn fx:id="colCodigo"     text="Código"         prefWidth="100"/>
+            <TableColumn fx:id="colNome"       text="Nome"           prefWidth="160"/>
+            <TableColumn fx:id="colPrincipio"  text="Princípio Ativo" prefWidth="160"/>
+            <TableColumn fx:id="colValidade"   text="Validade"       prefWidth="110"/>
+            <TableColumn fx:id="colQtd"        text="Qtd"            prefWidth="70"/>
+            <TableColumn fx:id="colPreco"      text="Preço"          prefWidth="100"/>
+            <TableColumn fx:id="colControlado" text="Controlado"     prefWidth="90"/>
+            <TableColumn fx:id="colFornecedor" text="Fornecedor"     prefWidth="160"/>
         </columns>
     </TableView>
 
-    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="1068.0" style="-fx-font-size: 18; -fx-font-weight: bold;" text="LISTA DE FORNECEDORES">
-      <font>
-         <Font size="18.0" />
-      </font></Label>
+    <Label text="LISTA DE FORNECEDORES" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
     <TableView fx:id="tblFornecedores" prefHeight="200">
         <columns>
-            <TableColumn fx:id="colFCnpj" prefWidth="150" text="CNPJ" />
-            <TableColumn fx:id="colFRazao" prefWidth="200" text="Razão Social" />
-            <TableColumn fx:id="colFTelefone" prefWidth="130" text="Telefone" />
-            <TableColumn fx:id="colFEmail" prefWidth="220" text="Email" />
-            <TableColumn fx:id="colFCidade" prefWidth="140" text="Cidade" />
-            <TableColumn fx:id="colFEstado" prefWidth="113.0" text="Estado" />
+            <TableColumn fx:id="colFCnpj"     text="CNPJ"         prefWidth="150"/>
+            <TableColumn fx:id="colFRazao"    text="Razão Social" prefWidth="200"/>
+            <TableColumn fx:id="colFTelefone" text="Telefone"     prefWidth="130"/>
+            <TableColumn fx:id="colFEmail"    text="Email"        prefWidth="220"/>
+            <TableColumn fx:id="colFCidade"   text="Cidade"       prefWidth="140"/>
+            <TableColumn fx:id="colFEstado"   text="Estado"       prefWidth="80"/>
         </columns>
     </TableView>
 
