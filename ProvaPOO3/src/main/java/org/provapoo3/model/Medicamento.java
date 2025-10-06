@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Medicamento {
-    private String codigo;     
+    private String codigo;
     private String nome;
     private String descricao;
     private String principioAtivo;
@@ -109,4 +109,3 @@ public class Medicamento {
     }
     @Override public int hashCode() { return Objects.hash(codigo); }
 }
-
