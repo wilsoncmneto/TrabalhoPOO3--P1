@@ -1,13 +1,11 @@
 package org.provapoo3.model;
 
-package br.com.farmacia.model;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class medicamento {
-    private String codigo;                 // 7 caracteres alfanuméricos
+public class Medicamento {
+    private String codigo;      // 7 alfanuméricos
     private String nome;
     private String descricao;
     private String principioAtivo;
@@ -17,17 +15,7 @@ public class medicamento {
     private boolean controlado;
     private Fornecedor fornecedor;
 
-    public Medicamento() {
-        this.codigo = codigo;
-        this.nome = nome;
-        this.descricao = descricao;
-        this.principioAtivo = principioAtivo;
-        this.dataValidade = dataValidade;
-        this.quantidadeEstoque = quantidadeEstoque;
-        this.preco = preco;
-        this.controlado = controlado;
-        this.fornecedor = fornecedor;
-    }
+    public Medicamento() {}
 
     public Medicamento(String codigo, String nome, String descricao, String principioAtivo, LocalDate dataValidade, int quantidadeEstoque, BigDecimal preco, boolean controlado, Fornecedor fornecedor) {
         this.codigo = codigo;
@@ -113,19 +101,11 @@ public class medicamento {
         this.fornecedor = fornecedor;
     }
 
-    @Override
-    public String toString() {
-        return "Medicamento{" +
-                "codigo='" + codigo + '\'' +
-                ", nome='" + nome + '\'' +
-                ", descricao='" + descricao + '\'' +
-                ", principioAtivo='" + principioAtivo + '\'' +
-                ", dataValidade=" + dataValidade +
-                ", quantidadeEstoque=" + quantidadeEstoque +
-                ", preco=" + preco +
-                ", controlado=" + controlado +
-                ", fornecedor=" + fornecedor +
-                '}';
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Medicamento)) return false;
+        Medicamento that = (Medicamento) o;
+        return Objects.equals(codigo, that.codigo);
     }
+    @Override public int hashCode() { return Objects.hash(codigo); }
 }
-
