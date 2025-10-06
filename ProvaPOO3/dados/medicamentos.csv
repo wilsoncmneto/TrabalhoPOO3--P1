@@ -1,0 +1,5 @@
+codigo;nome;descricao;principioAtivo;dataValidade;quantidadeEstoque;preco;controlado;forn_cnpj;forn_razao;forn_telefone;forn_email;forn_cidade;forn_estado
+DEF5678;Amoxicilina 500mg;Antibiótico;Amoxicilina Trihidratada;2025-12-20;15;24.50;false;98765432000100;BioHealth;62999998888;bio@health.com;Anápolis;GO
+GHI9012;Paracetamol 750mg;Antitérmico e analgésico;Paracetamol;2026-07-10;30;8.75;false;11122233000144;FarmaPlus;6233114455;atendimento@farmaplus.com;Senador Canedo;GO
+JKL3456;Omeprazol 20mg;Reduz a acidez do estômago;Omeprazol;2026-11-05;12;18.90;false;55544433000111;CuraBem;62988776655;contato@curabem.com;Aparecida;GO
+MNO7890;Diazepam 10mg;Ansiolítico e relaxante muscular;Diazepam;2025-09-01;8;32.00;true;44433322000122;CalmMed;62944556677;vendas@calmmed.com;Goiânia;GO
