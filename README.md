@@ -5,7 +5,7 @@ Inclui **CRUD**, **persistência em CSV**, e **relatórios com Stream API** (fil
 
 > Projeto acadêmico — focado em clareza e requisitos funcionais/técnicos.
 
----
+---------------------------------------------------
 
 ## ✅ Requisitos do Ambiente
 
@@ -16,7 +16,7 @@ Inclui **CRUD**, **persistência em CSV**, e **relatórios com Stream API** (fil
 
 > O projeto usa `module-info.java`. Se rodar sem Maven/Gradle, será necessário configurar **module-path** do JavaFX manualmente.
 
----
+---------------------------------------------------
 
 ## 📦 Estrutura do Projeto
 
@@ -42,7 +42,7 @@ projeto/
 └── README.md
 ```
 
----
+---------------------------------------------------
 
 ## ▶️ Como Executar
 
@@ -92,7 +92,7 @@ Com plugin JavaFX configurado no `build.gradle`, algo como:
 gradle clean run
 ```
 
----
+---------------------------------------------------
 
 ## 🧭 Ponto de Entrada
 
@@ -116,7 +116,7 @@ module org.provapoo3 {
 }
 ```
 
----
+---------------------------------------------------
 
 ## 🗃️ Persistência (CSV)
 
@@ -125,6 +125,7 @@ module org.provapoo3 {
   ```
   codigo;nome;descricao;principioAtivo;dataValidade;quantidadeEstoque;preco;controlado;forn_cnpj;forn_razao;forn_telefone;forn_email;forn_cidade;forn_estado
   ```
+------------------------------------------------
 
   * separador: **ponto-e-vírgula (;)**
   * **datas** no formato ISO: `yyyy-MM-dd`
@@ -139,7 +140,7 @@ module org.provapoo3 {
 
 * O sistema **carrega** o CSV ao iniciar e **salva** após cada operação de **Salvar** ou **Excluir**.
 
----
+---------------------------------------------------
 
 ## 🧩 Funcionalidades
 
@@ -166,7 +167,7 @@ Botões:
 
 > Todos os relatórios usam **Streams** (`filter`, `sorted`, `groupingBy`, `mapping`, `reducing`).
 
----
+---------------------------------------------------
 
 ## 🔒 Validações (Requisitos Técnicos)
 
@@ -179,7 +180,7 @@ Botões:
 
 Erros de validação são exibidos em **Alert** com mensagens objetivas.
 
----
+---------------------------------------------------
 
 ## 🖥️ Interface (Resumo)
 
@@ -191,7 +192,7 @@ Erros de validação são exibidos em **Alert** com mensagens objetivas.
 > Ao **Buscar**, as tabelas mostram **apenas** o registro e seu fornecedor.
 > Ao clicar em **Listar Todos**, tudo volta à listagem completa.
 
----
+---------------------------------------------------
 
 ## 🧪 Como Testar Rápido
 
@@ -205,7 +206,7 @@ Erros de validação são exibidos em **Alert** com mensagens objetivas.
    * **Controlados / Não controlados** → confira a mudança na Tabela
 4. Use **Buscar por Código** e depois **Listar Todos**.
 
----
+---------------------------------------------------
 
 ## 🛠️ Solução de Problemas Comuns
 
@@ -241,7 +242,7 @@ Erros de validação são exibidos em **Alert** com mensagens objetivas.
 * **CSV não cria**
   Verifique se a pasta `dados/` existe. O app tenta criar; se não tiver permissão, crie manualmente.
 
----
+---------------------------------------------------
 
 ## 🧱 Decisões de Design (resumo)
 
@@ -252,7 +253,7 @@ Erros de validação são exibidos em **Alert** com mensagens objetivas.
 
 > Em um projeto maior, separaríamos em camadas (`Service`, `Repository`, `Validators`) e usaríamos uma lib CSV robusta.
 
----
+---------------------------------------------------
 
 ## 📋 Checklist de Entrega (Professor)
 
@@ -263,13 +264,13 @@ Erros de validação são exibidos em **Alert** com mensagens objetivas.
 * [x] **Interface JavaFX** funcional
 * [x] **README.md** com execução e detalhes técnicos
 
----
+---------------------------------------------------
 
 ## 📄 Licença
 
 Uso acadêmico / educacional.
 
----
+------------------------------------------------
 
 ## 🙋 Dúvidas / Suporte
 
@@ -279,5 +280,3 @@ Se surgir qualquer erro de execução, informe:
 * Versão do JDK e JavaFX
 * Mensagem completa do erro
 * Screenshot (se possível)
-
-Assim fica mais fácil de ajudar!
