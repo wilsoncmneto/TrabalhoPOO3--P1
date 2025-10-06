@@ -1,6 +1,8 @@
 package org.provapoo3.model;
 
-public class fornecedor {
+import java.util.Objects;
+
+public class Fornecedor {
     private String cnpj;
     private String razaoSocial;
     private String telefone;
@@ -8,7 +10,9 @@ public class fornecedor {
     private String cidade;
     private String estado;
 
-    public fornecedor(String cnpj, String razaoSocial, String telefone, String email, String cidade, String estado) {
+    public Fornecedor() {}
+
+    public Fornecedor(String cnpj, String razaoSocial, String telefone, String email, String cidade, String estado) {
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
         this.telefone = telefone;
@@ -65,15 +69,14 @@ public class fornecedor {
         this.estado = estado;
     }
 
-    @Override
-    public String toString() {
-        return "fornecedor{" +
-                "cnpj='" + cnpj + '\'' +
-                ", razaoSocial='" + razaoSocial + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", email='" + email + '\'' +
-                ", cidade='" + cidade + '\'' +
-                ", estado='" + estado + '\'' +
-                '}';
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Fornecedor)) return false;
+        Fornecedor that = (Fornecedor) o;
+        return Objects.equals(cnpj, that.cnpj);
     }
+
+    @Override public int hashCode() { return Objects.hash(cnpj); }
+
+    @Override public String toString() { return razaoSocial + " (" + cnpj + ")"; }
 }
