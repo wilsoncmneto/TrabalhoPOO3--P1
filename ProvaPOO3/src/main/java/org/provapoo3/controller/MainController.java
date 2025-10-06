@@ -3,7 +3,7 @@ package org.provapoo3.controller;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-        import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.PropertyValueFactory;
 import org.provapoo3.model.Fornecedor;
 import org.provapoo3.model.Medicamento;
 import org.provapoo3.persistence.CsvMedicamentoRepository;
@@ -12,16 +12,8 @@ import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
-/**
- * MainController (versão "mínimo saudável")
- * - Validação centralizada aqui (código, nome, data, quantidade, preço, CNPJ)
- * - Persistência direto no CSV via CsvMedicamentoRepository
- * - Operações: Cadastrar, Excluir, Consultar, Listar
- * - Cumpre os requisitos do trabalho de faculdade
- */
 public class MainController {
 
-    // ==== CAMPOS DA UI (defina os fx:id no FXML/Scene Builder) ====
     // Medicamento
     @FXML private TextField txtCodigo, txtNome, txtDescricao, txtPrincipio, txtQuantidade, txtPreco;
     @FXML private DatePicker dateValidade;
@@ -41,13 +33,13 @@ public class MainController {
     // Repositório CSV (persistência)
     private CsvMedicamentoRepository repo;
 
-    // ==== INICIALIZAÇÃO ====
+    // INICIALIZAÇÃO 
     @FXML
     public void initialize() {
-        // CSV com “;”, cabeçalho e carga automática ao iniciar (requisito de persistência)
+        // CSV 
         this.repo = new CsvMedicamentoRepository(Path.of("dados/medicamentos.csv"));
 
-        // Ligações das colunas (propriedades do modelo)
+        // Ligações das colunas 
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colPrincipio.setCellValueFactory(new PropertyValueFactory<>("principioAtivo"));
@@ -60,16 +52,16 @@ public class MainController {
                         c.getValue().getFornecedor() != null ? c.getValue().getFornecedor().getRazaoSocial() : ""
                 ));
 
-        atualizarTabela(); // lista tudo ao abrir
+        atualizarTabela(); 
     }
 
     private void atualizarTabela() {
         tblMedicamentos.setItems(FXCollections.observableArrayList(repo.findAll()));
     }
 
-    // ==== AÇÕES DA TELA ====
+    // AÇÕES DA TELA
 
-    // Cadastrar novo medicamento (CRUD + validação)
+    // Cadastrar novo medicamento 
     @FXML
     private void onSalvar() {
         try {
@@ -77,7 +69,7 @@ public class MainController {
             Fornecedor fornecedor = montarFornecedorDosCampos();
             Medicamento med = montarMedicamentoDosCampos(fornecedor);
 
-            // 2) Validação (requisito técnico)
+            // 2) Validação
             validarFornecedor(fornecedor);
             validarMedicamento(med);
 
@@ -136,13 +128,13 @@ public class MainController {
         }
     }
 
-    // Listar todos (recarrega tabela)
+    // Listar todos 
     @FXML
     private void onListar() {
         atualizarTabela();
     }
 
-    // ==== MONTAGEM DOS OBJETOS ====
+    // MONTAGEM DOS OBJETOS
 
     private Fornecedor montarFornecedorDosCampos() {
         return new Fornecedor(
@@ -169,14 +161,14 @@ public class MainController {
         );
     }
 
-    // ==== VALIDAÇÃO CENTRALIZADA ====
+    // VALIDAÇÃO CENTRALIZADA
 
     private void validarMedicamento(Medicamento m) {
-        validarCodigo7(m.getCodigo());                            // Código: 7 alfanuméricos
-        validarNaoVazioMin(m.getNome(), 2, "Nome inválido (mín. 2)."); // Nome: não vazio
-        validarValidadeFutura(m.getDataValidade());               // Data de validade futura
-        validarQuantidadeNaoNegativa(m.getQuantidadeEstoque());   // Quantidade >= 0
-        validarPrecoPositivo(m.getPreco());                       // Preço > 0
+        validarCodigo7(m.getCodigo());                                    // Código: 7 alfanuméricos
+        validarNaoVazioMin(m.getNome(), 2, "Nome inválido (mín. 2).");    // Nome: não vazio
+        validarValidadeFutura(m.getDataValidade());                       // Data de validade futura
+        validarQuantidadeNaoNegativa(m.getQuantidadeEstoque());           // Quantidade >= 0
+        validarPrecoPositivo(m.getPreco());                               // Preço > 0
         if (m.getFornecedor() == null)
             throw new IllegalArgumentException("Fornecedor é obrigatório.");
     }
@@ -184,10 +176,9 @@ public class MainController {
     private void validarFornecedor(Fornecedor f) {
         validarCnpj(f.getCnpj());                                      // CNPJ válido com DV
         validarNaoVazioMin(f.getRazaoSocial(), 2, "Razão social inválida (mín. 2).");
-        // Os demais campos podem ser opcionais no trabalho; ajuste se quiser obrigatórios.
     }
 
-    // ==== HELPERS DE VALIDAÇÃO ====
+    // HELPERS DE VALIDAÇÃO 
 
     private void validarCodigo7(String codigo) {
         if (codigo == null || !codigo.matches("^[A-Za-z0-9]{7}$"))
@@ -232,7 +223,7 @@ public class MainController {
         return (r < 2) ? 0 : 11 - r;
     }
 
-    // ==== PARSERS COM MENSAGEM CLARA ====
+    // PARSERS COM MENSAGEM CLARA
 
     private int parseInt(String s, String msgErro) {
         try { return Integer.parseInt(s.trim()); }
@@ -244,7 +235,7 @@ public class MainController {
         catch (Exception e) { throw new IllegalArgumentException(msgErro); }
     }
 
-    // ==== UTIL (preencher/limpar/alerts) ====
+    // UTIL (preencher/limpar/alerts)
 
     private void preencherCampos(Medicamento m) {
         txtCodigo.setText(m.getCodigo());
