@@ -17,12 +17,12 @@ import java.util.*;
 
 public class MainController {
 
-    // ================= MEDICAMENTO (fx:id do FXML) =================
+    // ================= MEDICAMENTO =================
     @FXML private TextField txtCodigo, txtNome, txtDescricao, txtPrincipio, txtQuantidade, txtPreco;
     @FXML private DatePicker dateValidade;
     @FXML private CheckBox chkControlado;
 
-    // ================= FORNECEDOR (fx:id do FXML) =================
+    // ================= FORNECEDOR  =================
     @FXML private TextField txtCnpj, txtRazao, txtTelefone, txtEmail, txtCidade, txtEstado;
 
     // ================= TABELA DE MEDICAMENTOS =================
@@ -72,18 +72,25 @@ public class MainController {
         colFEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
         carregarCSV();
-        atualizarTabela();
-        atualizarTabelaFornecedores();
+        mostrarTodos();
     }
 
-    private void atualizarTabela() {
+    /* ===================== VISÕES DA TABELA ===================== */
+
+    // Restaura a visão completa nas duas tabelas
+    private void mostrarTodos() {
         tblMedicamentos.setItems(FXCollections.observableArrayList(cache));
-    }
-    private void atualizarTabelaFornecedores() {
-        tblFornecedores.setItems(FXCollections.observableArrayList(fornecedoresUnicos()));
+        tblFornecedores.setItems(FXCollections.observableArrayList(fornecedoresUnicos(cache)));
     }
 
-    // ================= AÇÕES =================
+    // Mostra somente o resultado da busca (1 medicamento) nas duas tabelas
+    private void mostrarResultadoBusca(Medicamento m) {
+        tblMedicamentos.setItems(FXCollections.observableArrayList(List.of(m)));
+        tblFornecedores.setItems(FXCollections.observableArrayList(fornecedoresUnicos(List.of(m))));
+    }
+
+    /* ========================= AÇÕES ========================= */
+
     @FXML
     private void onSalvar() {
         try {
@@ -101,8 +108,7 @@ public class MainController {
             salvarFornecedoresCSV();
 
             limparCampos();
-            atualizarTabela();
-            atualizarTabelaFornecedores();
+            mostrarTodos(); // mantém visão completa após salvar
             info("Sucesso", "Medicamento cadastrado.");
         } catch (IllegalArgumentException e) {
             erro("Validação", e.getMessage());
@@ -119,8 +125,7 @@ public class MainController {
             if (removed) {
                 salvarCSV();
                 salvarFornecedoresCSV();
-                atualizarTabela();
-                atualizarTabelaFornecedores();
+                mostrarTodos(); // restaura visão completa
                 info("Sucesso", "Medicamento excluído.");
             } else {
                 info("Aviso", "Código não encontrado.");
@@ -137,8 +142,12 @@ public class MainController {
         try {
             validarCodigo7(txtCodigo.getText());
             Optional<Medicamento> med = buscarPorCodigo(txtCodigo.getText());
-            if (med.isEmpty()) { info("Aviso", "Medicamento não encontrado."); return; }
+            if (med.isEmpty()) {
+                info("Aviso", "Medicamento não encontrado.");
+                return;
+            }
             preencherCampos(med.get());
+            mostrarResultadoBusca(med.get()); // filtra ambas as tabelas
         } catch (IllegalArgumentException e) {
             erro("Validação", e.getMessage());
         } catch (Exception e) {
@@ -148,17 +157,117 @@ public class MainController {
 
     @FXML
     private void onListar() {
-        atualizarTabela();
-        atualizarTabelaFornecedores();
+        mostrarTodos(); // volta a exibir tudo
     }
 
-    // ================= Cache helpers =================
+    /* ===================== RELATÓRIOS ===================== */
+
+    // 1) Próximos 30 dias
+    @FXML
+    private void onRelProximos30() {
+        LocalDate hoje = LocalDate.now();
+        LocalDate limite = hoje.plusDays(30);
+
+        List<Medicamento> meds = cache.stream()
+                .filter(m -> m.getDataValidade() != null)
+                .filter(m -> !m.getDataValidade().isBefore(hoje) && !m.getDataValidade().isAfter(limite))
+                .sorted(Comparator.comparing(Medicamento::getDataValidade))
+                .toList();
+
+        aplicarResultadoMedicamentos(meds, "Nenhum medicamento vence nos próximos 30 dias.");
+    }
+
+    // 2) Estoque baixo (<5)
+    @FXML
+    private void onRelEstoqueBaixo() {
+        List<Medicamento> meds = cache.stream()
+                .filter(m -> m.getQuantidadeEstoque() < 5)
+                .sorted(Comparator.comparingInt(Medicamento::getQuantidadeEstoque))
+                .toList();
+
+        aplicarResultadoMedicamentos(meds, "Nenhum medicamento com estoque baixo (<5).");
+    }
+
+    // 3) Valor total do estoque por fornecedor (soma: preço * qtd) – mostra em diálogo e filtra tabelas
+    @FXML
+    private void onRelValorTotalPorFornecedor() {
+        Map<String, BigDecimal> totalPorFornecedor = cache.stream()
+                .filter(m -> m.getFornecedor() != null)
+                .collect(
+                        java.util.stream.Collectors.groupingBy(
+                                m -> m.getFornecedor().getRazaoSocial(),
+                                java.util.stream.Collectors.mapping(
+                                        m -> m.getPreco()!=null ?
+                                                m.getPreco().multiply(new BigDecimal(m.getQuantidadeEstoque()))
+                                                : BigDecimal.ZERO,
+                                        java.util.stream.Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)
+                                )
+                        )
+                );
+
+        if (totalPorFornecedor.isEmpty()) {
+            info("Relatório", "Não há dados para calcular.");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder("Valor total do estoque por fornecedor:\n\n");
+        totalPorFornecedor.entrySet().stream()
+                .sorted(Map.Entry.<String, BigDecimal>comparingByValue().reversed())
+                .forEach(e -> sb.append(String.format("%s: R$ %s%n",
+                        e.getKey(),
+                        e.getValue().setScale(2, java.math.RoundingMode.HALF_UP).toPlainString()
+                )));
+        info("Relatório", sb.toString());
+
+        Set<String> fornecedoresComValor = totalPorFornecedor.keySet();
+        List<Medicamento> meds = cache.stream()
+                .filter(m -> m.getFornecedor()!=null && fornecedoresComValor.contains(m.getFornecedor().getRazaoSocial()))
+                .toList();
+        tblMedicamentos.setItems(FXCollections.observableArrayList(meds));
+        tblFornecedores.setItems(FXCollections.observableArrayList(fornecedoresUnicos(meds)));
+    }
+
+    // 4) Controlados
+    @FXML
+    private void onRelControlados() {
+        List<Medicamento> meds = cache.stream()
+                .filter(Medicamento::isControlado)
+                .sorted(Comparator.comparing(Medicamento::getNome, String.CASE_INSENSITIVE_ORDER))
+                .toList();
+
+        aplicarResultadoMedicamentos(meds, "Nenhum medicamento controlado.");
+    }
+
+    // 5) Não controlados
+    @FXML
+    private void onRelNaoControlados() {
+        List<Medicamento> meds = cache.stream()
+                .filter(m -> !m.isControlado())
+                .sorted(Comparator.comparing(Medicamento::getNome, String.CASE_INSENSITIVE_ORDER))
+                .toList();
+
+        aplicarResultadoMedicamentos(meds, "Nenhum medicamento não controlado.");
+    }
+
+    // aplica a lista filtrada nas duas tabelas (meds e fornecedores correspondentes)
+    private void aplicarResultadoMedicamentos(List<Medicamento> meds, String msgVazio) {
+        if (meds.isEmpty()) {
+            info("Relatório", msgVazio);
+        }
+        tblMedicamentos.setItems(FXCollections.observableArrayList(meds));
+        tblFornecedores.setItems(FXCollections.observableArrayList(fornecedoresUnicos(meds)));
+    }
+
+    /* =================== Cache & utilitários =================== */
+
     private Optional<Medicamento> buscarPorCodigo(String codigo) {
         return cache.stream().filter(m -> m.getCodigo().equals(codigo)).findFirst();
     }
-    private List<Fornecedor> fornecedoresUnicos() {
+
+    // dedup por CNPJ; usa a lista passada (permite filtrar)
+    private List<Fornecedor> fornecedoresUnicos(List<Medicamento> meds) {
         LinkedHashMap<String, Fornecedor> map = new LinkedHashMap<>();
-        for (Medicamento m : cache) {
+        for (Medicamento m : meds) {
             Fornecedor f = m.getFornecedor();
             if (f != null && f.getCnpj()!=null && !f.getCnpj().isBlank()) {
                 map.putIfAbsent(f.getCnpj(), f);
@@ -167,7 +276,8 @@ public class MainController {
         return new ArrayList<>(map.values());
     }
 
-    // ================= Montagem dos objetos =================
+    /* ================= Montagem e Validação ================= */
+
     private Fornecedor montarFornecedorDosCampos() {
         return new Fornecedor(
                 txtCnpj.getText(), txtRazao.getText(), txtTelefone.getText(), txtEmail.getText(),
@@ -184,7 +294,6 @@ public class MainController {
         );
     }
 
-    // ================= Validações =================
     private void validarMedicamento(Medicamento m) {
         validarCodigo7(m.getCodigo());
         validarNaoVazioMin(m.getNome(), 2, "Nome inválido (mín. 2).");
@@ -268,7 +377,8 @@ public class MainController {
     private void info(String t, String m) { new Alert(Alert.AlertType.INFORMATION, m).show(); }
     private void erro(String t, String m) { new Alert(Alert.AlertType.ERROR, m).show(); }
 
-    // ================= CSV =================
+    /* ========================= CSV ========================= */
+
     private void carregarCSV() {
         try {
             Files.createDirectories(arquivoCSV.getParent());
@@ -303,16 +413,24 @@ public class MainController {
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)
         ) {
             bw.write(HEADER_MED); bw.newLine();
-            for (Medicamento m : cache) {
+
+            // salva ordenado por nome, depois código (opcional, deixa organizado)
+            List<Medicamento> sorted = new ArrayList<>(cache);
+            sorted.sort(Comparator
+                    .comparing(Medicamento::getNome, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(Medicamento::getCodigo, String.CASE_INSENSITIVE_ORDER));
+
+            for (Medicamento m : sorted) {
                 var f = m.getFornecedor();
                 bw.write(String.join(";",
-                        m.getCodigo(), m.getNome(), m.getDescricao(), m.getPrincipioAtivo(),
-                        m.getDataValidade().toString(),
+                        nz(m.getCodigo()), nz(m.getNome()), nz(m.getDescricao()), nz(m.getPrincipioAtivo()),
+                        m.getDataValidade()!=null ? m.getDataValidade().toString() : "",
                         Integer.toString(m.getQuantidadeEstoque()),
-                        m.getPreco().toPlainString(),
+                        m.getPreco()!=null ? m.getPreco().setScale(2, java.math.RoundingMode.HALF_UP).toPlainString() : "",
                         Boolean.toString(m.isControlado()),
-                        nz(f.getCnpj()), nz(f.getRazaoSocial()), nz(f.getTelefone()), nz(f.getEmail()),
-                        nz(f.getCidade()), nz(f.getEstado())
+                        nz(f!=null?f.getCnpj():""), nz(f!=null?f.getRazaoSocial():""),
+                        nz(f!=null?f.getTelefone():""), nz(f!=null?f.getEmail():""),
+                        nz(f!=null?f.getCidade():""), nz(f!=null?f.getEstado():"")
                 ));
                 bw.newLine();
             }
@@ -327,9 +445,15 @@ public class MainController {
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)
         ) {
             bw.write(HEADER_FORN); bw.newLine();
-            for (Fornecedor f : fornecedoresUnicos()) {
-                bw.write(String.join(";", nz(f.getCnpj()), nz(f.getRazaoSocial()), nz(f.getTelefone()),
-                        nz(f.getEmail()), nz(f.getCidade()), nz(f.getEstado())));
+
+            List<Fornecedor> fornecedores = fornecedoresUnicos(cache);
+            fornecedores.sort(Comparator.comparing(Fornecedor::getRazaoSocial, String.CASE_INSENSITIVE_ORDER));
+
+            for (Fornecedor f : fornecedores) {
+                bw.write(String.join(";",
+                        nz(f.getCnpj()), nz(f.getRazaoSocial()), nz(f.getTelefone()),
+                        nz(f.getEmail()), nz(f.getCidade()), nz(f.getEstado())
+                ));
                 bw.newLine();
             }
         } catch (IOException e) {
